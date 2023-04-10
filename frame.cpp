@@ -29,7 +29,7 @@ void Frame::removeChild(Frame* child)
 
 void Frame::Rotate(float angle)
 {
-    _angle += angle;
+    _angle += angle * (PI / 180.0f);
     for (auto child : _children) {
         child->Rotate(angle);
     }
@@ -59,8 +59,9 @@ void Frame::Draw(ID2D1RenderTarget* renderTarget)
     //renderTarget->SaveDrawingState();
 
     // применяем преобразования фрейма
-    renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_angle, _position) * D2D1::Matrix3x2F::Scale(_scale, _position) *
-        D2D1::Matrix3x2F::Translation(_position.x,_position.y));
+    renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_angle, _position)*
+     D2D1::Matrix3x2F::Scale(_scale, _position));/*
+        D2D1::Matrix3x2F::Translation(_position.x, _position.y));*/
 
     // рисуем элементы внутри фрейма
     

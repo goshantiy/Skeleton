@@ -13,6 +13,7 @@ private:
 	ID2D1Factory* _pFactory;
 	ID2D1HwndRenderTarget* _pRenderTarget;
 	ID2D1SolidColorBrush* _brush;
+	int _height;
 	bool wave = 0;
 	bool arm = 0;//0 - left, 1 - right
 public:
@@ -20,6 +21,8 @@ public:
 	PCWSTR  ClassName() const { return L"Skeleton Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	HRESULT Init();
+	void Resize(Frame*);
+	void CalculateLayout();
 	void InitSkeleton();
 	void OnPaint();
 	void Show(int);
