@@ -55,21 +55,17 @@ void Frame::Move(D2D1_POINT_2F pos)
 
 void Frame::Draw(ID2D1RenderTarget* renderTarget)
 {
-    // сохраняем состояние рендеринга
     //renderTarget->SaveDrawingState();
 
-    // применяем преобразования фрейма
-    renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_angle, _position)*
+    if(_parent)
+    renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_angle, _parent->GetPosition())*
      D2D1::Matrix3x2F::Scale(_scale, _position));/*
         D2D1::Matrix3x2F::Translation(_position.x, _position.y));*/
 
-    // рисуем элементы внутри фрейма
-    
     for (IElement* element : _elements) {
         element->Draw(renderTarget);
     }
 
-    // вызываем метод Draw для каждого дочернего фрейма
     for (Frame* child : _children) {
         child->Draw(renderTarget);
     }

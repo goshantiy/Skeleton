@@ -27,7 +27,6 @@ public:
     void Scale(D2D1_SIZE_F);
     void Move(D2D1_POINT_2F);
     void Draw(ID2D1RenderTarget* renderTarget);
-    // методы для получения параметров фрейма
     D2D1_POINT_2F GetPosition() const { return _position; }
     D2D1_SIZE_F GetScale() const { return _scale; }
     float GetAngle() const { return _angle; }
