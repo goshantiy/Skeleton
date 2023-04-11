@@ -8,6 +8,27 @@ Frame* Frame::getChild(std::string name)
     return nullptr;
 }
 
+D2D1::Matrix3x2F Frame::GetTransform() const
+{
+    if(_parent)
+    return D2D1::Matrix3x2F::Scale(_scale, _parent->GetPosition()) *
+        D2D1::Matrix3x2F::Rotation(_angle,_parent->GetPosition());
+    return D2D1::Matrix3x2F::Identity();
+}
+D2D1::Matrix3x2F Frame::GetParentTransform() const
+{
+    if (_parent) {
+        return _parent->GetTransform();
+    }
+    return D2D1::Matrix3x2F::Identity();
+}
+void Frame::setDirection(int dir)
+{
+    if (dir >= 0)
+        _direction = 1;
+    else _direction = -1;
+}
+
 void Frame::addElem(IElement* elem)
 {
     _elements.push_back(elem);
@@ -31,8 +52,9 @@ void Frame::removeChild(Frame* child)
 
 void Frame::Rotate(float angle)
 {
-    _angle += angle * (PI / 180.0f);
+    _angle += angle*_direction;
     for (auto child : _children) {
+        child->setDirection(_direction);   
         child->Rotate(angle);
     }
 }
@@ -59,10 +81,10 @@ void Frame::Draw(ID2D1RenderTarget* renderTarget)
 {
     //renderTarget->SaveDrawingState();
 
-    if(_parent)
-    renderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_angle, _parent->GetPosition())*
-     D2D1::Matrix3x2F::Scale(_scale, _position));/*
-        D2D1::Matrix3x2F::Translation(_position.x, _position.y));*/
+    D2D1::Matrix3x2F transform = GetTransform()*GetParentTransform();
+
+    // устанавливаем матрицу преобразования
+    renderTarget->SetTransform(transform);
 
     for (IElement* element : _elements) {
         element->Draw(renderTarget);

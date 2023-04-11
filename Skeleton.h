@@ -18,7 +18,7 @@ private:
 	ID2D1SolidColorBrush* _brush;
 	int _height;
 	bool wave = 0;
-	bool arm = 0;//0 - left, 1 - right
+	bool arm = 1;//0 - left, 1 - right
 	float l_arm_angle = 0.f;
 	float r_arm_angle = 0.f;
 	std::queue<UINT> g_drawQueue;
