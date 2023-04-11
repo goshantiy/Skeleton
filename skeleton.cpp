@@ -79,6 +79,7 @@ LRESULT Skeleton::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
             case 'L':
                 wave = true;
+                l_arm_angle += 0.5f;
                 return 0;
             }
             break;
@@ -88,6 +89,7 @@ LRESULT Skeleton::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
             case 'L':
                 wave = false;
+                l_arm_angle -= 0.5f;
                 return 0;
             }
             break;
@@ -117,7 +119,7 @@ void Skeleton::InitSkeleton()
 {
   
     Frame* chest = new Frame(_mainframe->GetPosition(), D2D1::SizeF(1.0f, 1.0f), 0.0f, _mainframe, "chest");
-    _mainframe->addChild(chest);
+ 
     D2D1_POINT_2F pos = chest->GetPosition();
     Frame* l_arm = new Frame(D2D1::Point2F(pos.x - 55.0f, pos.y - 10.f), D2D1::SizeF(1.0f, 1.0f), 0.0f, chest, "left_arm");
     pos = l_arm->GetPosition();
@@ -191,6 +193,7 @@ void Skeleton::InitSkeleton()
     RectElement* headR = new RectElement(_brush, D2D1::RectF(head->GetPosition().x - 25.f, head->GetPosition().y + 10.f,
         head->GetPosition().x + 25.f, head->GetPosition().y - 10.f));
     //binding
+
     head->addElem(headR);
 
     chest->addChild(l_arm);
@@ -206,17 +209,47 @@ void Skeleton::InitSkeleton()
     r_leg->addChild(r_foot);
     r_arm->addChild(r_f_arm);
     r_f_arm->addChild(r_hand);
-
+    
+    _mainframe->addChild(chest);
 }
 
 void Skeleton::OnPaint()
 {
         _pRenderTarget->BeginDraw();
+        _pRenderTarget->Clear();
+        // Update the angle of the right arm for the next frame
+        
+        if (wave && arm)
+        {
+            r_arm_angle += 0.001f;
+            if (r_arm_angle > 0.5f)
+            {
+                arm = 0;
+            }
+        }
+        else if (wave && !arm)
+        {
+            r_arm_angle -= 0.001f;
+            if (r_arm_angle < -0.5f)
+            {
+                arm = 1;
+                wave = 0;
+            }
+        }
+        auto right_arm_frame = _mainframe->getChild("right_arm");
+        right_arm_frame->Rotate(r_arm_angle);
         _mainframe->Draw(_pRenderTarget);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         _pRenderTarget->EndDraw();
 }
 
 void Skeleton::Show(int nCmdShow) {
     ShowWindow(m_hwnd, nCmdShow);
     UpdateWindow(m_hwnd);
+}
+Skeleton::~Skeleton()
+{
+   _pFactory->Release();
+   _pRenderTarget->Release();
+   _brush->Release();
 }

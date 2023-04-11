@@ -3,6 +3,7 @@
 #include <queue>
 #include <mutex>
 #include <d2d1.h>
+#include <condition_variable>
 #include "frame.h"
 #include "Resource.h"
 #include "basewin.h"
@@ -18,14 +19,15 @@ private:
 	int _height;
 	bool wave = 0;
 	bool arm = 0;//0 - left, 1 - right
-	float l_arm_angle = 0;
-	float r_arm_angle = 0;
+	float l_arm_angle = 0.f;
+	float r_arm_angle = 0.f;
 	std::queue<UINT> g_drawQueue;
 
 	std::mutex g_drawMutex;
 	std::condition_variable g_drawCondition;
 public:
 	Skeleton(): _pFactory(nullptr), _pRenderTarget(nullptr), _mainframe(nullptr), _brush(nullptr) {};
+	~Skeleton();
 	PCWSTR  ClassName() const { return L"Skeleton Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	HRESULT Init();

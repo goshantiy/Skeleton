@@ -12,6 +12,8 @@ private:
     D2D1_SIZE_F _scale;
     float _angle;
     Frame* _parent;
+    //TO DO: 
+    //std::vector to std::unorder_map for fast search
     std::vector<Frame*> _children;
     std::vector<IElement*> _elements;
     std::string _name;

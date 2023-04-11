@@ -16,6 +16,8 @@ void Frame::addElem(IElement* elem)
 void Frame::addChild(Frame* child)
 {
 	_children.push_back(child);
+    for (auto it : child->_children)
+        _children.push_back(it);
 }
 
 void Frame::removeChild(Frame* child)
