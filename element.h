@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <d2d1.h>
+//interface for elements
+//Draw - method used for drawing the element
+//setVision - method that determines whether the object will be drawn
 class IElement
 {
 public:

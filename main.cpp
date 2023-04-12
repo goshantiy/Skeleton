@@ -7,7 +7,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
     }
     window.Show(nCmdShow);
 
-
+    //message loop
     MSG msg = {};
     while (GetMessage(&msg, nullptr, 0, 0)) {
         TranslateMessage(&msg);

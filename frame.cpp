@@ -71,17 +71,9 @@ void Frame::addChild(Frame* child)
         _children.push_back(it);
 }
 
-void Frame::removeChild(Frame* child)
-{
-    auto it = std::find(_children.begin(), _children.end(), child);
-    if (it != _children.end()) {
-        _children.erase(it);
-        child->_parent = nullptr;
-    }
-}
-
 void Frame::Rotate(float angle)
 {
+    //rotate this frame and his childs
     _angle += angle*_direction;
     for (auto child : _children) {
         child->setDirection(_direction);   
@@ -91,6 +83,7 @@ void Frame::Rotate(float angle)
 
 void Frame::Scale(D2D1_SIZE_F scale)
 {
+    //scale this frame and his childs
     _scale.width *= scale.width; _scale.height *= scale.height;
     for (auto child : _children) 
     {
@@ -100,6 +93,7 @@ void Frame::Scale(D2D1_SIZE_F scale)
 
 void Frame::Move(D2D1_POINT_2F pos)
 {
+    //change the position for this frame and his childs
     _position.x += pos.x;
     _position.y += pos.y;
     for (auto child : _children) {
@@ -111,13 +105,14 @@ void Frame::Draw(ID2D1RenderTarget* renderTarget)
 {
     D2D1::Matrix3x2F transform = GetTransform()*GetParentTransform();
 
-    // устанавливаем матрицу преобразования
+    // set transform matrix
     renderTarget->SetTransform(transform);
 
+    //draw all elements of this frame
     for (IElement* element : _elements) {
         element->Draw(renderTarget);
     }
-
+    //draw all childrens
     for (Frame* child : _children) {
         child->Draw(renderTarget);
     }
