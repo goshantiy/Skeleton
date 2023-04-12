@@ -42,23 +42,13 @@ void Skeleton::DrawThread()
     }
 }
 
-void Skeleton::Resize(Frame* frame)
-{
-    if (frame == nullptr) {
-        return;
-    }
 
-    const float BONE_LENGTH_RATIO = 0.2f; 
-    const float boneLength = _height * BONE_LENGTH_RATIO;
-    frame->Scale(D2D1::SizeF(boneLength, boneLength));
-}
 
 void Skeleton::CalculateLayout()
 {
     D2D1_SIZE_F fSize = _pRenderTarget->GetSize();
     const float x = fSize.width / 2.0f;
     const float y = fSize.height / 2.0f;
-    _height = fSize.height / 4.0f;
     _mainframe = new Frame(D2D1::Point2F(x, y), D2D1::SizeF(1, 1), 0, nullptr, "mainframe");
     InitSkeleton();
 }
@@ -78,17 +68,17 @@ LRESULT Skeleton::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             switch (wParam)
             {
             case 'L':
-                wave = true;
-                arm = 0;
+                _wave = true;
+                _arm = 0;
                 l_rotate_angle = 1.f;
                 return 0;
             case 'R':
-                wave = true;
-                arm = 1;
+                _wave = true;
+                _arm = 1;
                 r_rotate_angle = -1.f;
                 return 0;
             case VK_SPACE:
-                if (arm == 0)
+                if (_arm == 0)
                     l_stick = 1;
                 else r_stick = 1;
             }
@@ -333,12 +323,12 @@ void Skeleton::OnPaint()
 {
    _pRenderTarget->BeginDraw();
    _pRenderTarget->Clear();
-     if (wave && arm)
+     if (_wave && _arm)
     {
         animateRightArm();
         returnLeftArm();
     }
-    if (wave && !arm)
+    if (_wave && !_arm)
     {
         animateLeftArm();
         returnRightArm();

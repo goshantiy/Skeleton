@@ -16,9 +16,8 @@ private:
 	ID2D1Factory* _pFactory;
 	ID2D1HwndRenderTarget* _pRenderTarget;
 	ID2D1SolidColorBrush* _brush;
-	int _height;
-	bool wave = 0;
-	bool arm;//0 - left, 1 - right
+	bool _wave = 0;
+	bool _arm;//0 - left, 1 - right
 	bool l_stick = 0;
 	bool r_stick = 0;
 	float l_rotate_angle = 0.f;
@@ -28,7 +27,7 @@ private:
 	std::mutex g_drawMutex;
 	std::condition_variable g_drawCondition;
 public:
-	Skeleton(): _pFactory(nullptr), _pRenderTarget(nullptr), _mainframe(nullptr), _brush(nullptr) {};
+	Skeleton(): _pFactory(nullptr), _pRenderTarget(nullptr), _mainframe(nullptr), _brush(nullptr), _arm(0) {};
 	~Skeleton();
 	PCWSTR  ClassName() const { return L"Skeleton Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -38,7 +37,6 @@ public:
 	void animateLeftArm();
 	void animateRightArm();
 	void DrawThread();
-	void Resize(Frame*);
 	void CalculateLayout();
 	void InitSkeleton();
 	void OnPaint();
