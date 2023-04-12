@@ -80,12 +80,12 @@ LRESULT Skeleton::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             case 'L':
                 wave = true;
                 arm = 0;
-                l_arm_angle = 1.f;
+                l_rotate_angle = 1.f;
                 return 0;
             case 'R':
                 wave = true;
                 arm = 1;
-                r_arm_angle = -1.f;
+                r_rotate_angle = -1.f;
                 return 0;
             }
             break;
@@ -197,8 +197,8 @@ void Skeleton::InitSkeleton()
     // create head
     RectElement* headR = new RectElement(_brush, D2D1::RectF(head->GetPosition().x - 25.f, head->GetPosition().y + 10.f,
         head->GetPosition().x + 25.f, head->GetPosition().y - 10.f));
-    //binding
 
+    //binding
     head->addElem(headR);
 
     chest->addChild(l_arm);
@@ -220,75 +220,94 @@ void Skeleton::InitSkeleton()
     l_leg->Rotate(5);
 
 }
+void Skeleton::returnLeftArm()
+{
+    auto left_arm_frame = _mainframe->getChild("left_arm");
+    float angle_now = left_arm_frame->GetAngle();
+    if (angle_now > 0.f)
+    {
+        left_arm_frame->setDirection(-1);
+        left_arm_frame->Rotate(l_rotate_angle);
+    }
+    left_arm_frame = left_arm_frame->getChild("left_forearm");
+    angle_now = left_arm_frame->GetAngle();
+    if (angle_now > 0.f)
+    {
+        left_arm_frame->setDirection(-1);
+        left_arm_frame->Rotate(l_rotate_angle);
+    }
+}
+void Skeleton::returnRightArm()
+{
+    auto right_arm_frame = _mainframe->getChild("right_arm");
+    float angle_now = right_arm_frame->GetAngle();
+    if (angle_now < 0.f)
+    {
+        right_arm_frame->setDirection(-1);
+        right_arm_frame->Rotate(r_rotate_angle);
+    }
+    right_arm_frame = right_arm_frame->getChild("right_forearm");
+    angle_now = right_arm_frame->GetAngle();
+    if (angle_now < 0.f)
+    {
+        right_arm_frame->setDirection(-1);
+        right_arm_frame->Rotate(r_rotate_angle);
+    }
+}
+void Skeleton::animateRightArm()
+{
+    auto right_arm_frame = _mainframe->getChild("right_arm");
 
+    float angle_now = right_arm_frame->GetAngle();
+    if (angle_now <= -30.f)
+        right_arm_frame->setDirection(-1);
+    if (angle_now >= 0.f)
+        right_arm_frame->setDirection(1);
+    right_arm_frame->Rotate(r_rotate_angle);
+
+    right_arm_frame = right_arm_frame->getChild("right_forearm");
+
+    angle_now = right_arm_frame->GetAngle();
+    if (angle_now <= -60.f)
+        right_arm_frame->setDirection(-1);
+    if (angle_now >= 0.f)
+        right_arm_frame->setDirection(1);
+    right_arm_frame->Rotate(r_rotate_angle);
+}
+void Skeleton::animateLeftArm()
+{
+
+    auto left_arm_frame = _mainframe->getChild("left_arm");
+    float angle_now = left_arm_frame->GetAngle();
+    if (angle_now >= 30.f)
+        left_arm_frame->setDirection(-1);
+    if (angle_now <= 0.f)
+        left_arm_frame->setDirection(1);
+    left_arm_frame->Rotate(l_rotate_angle);
+
+    left_arm_frame = left_arm_frame->getChild("left_forearm");
+
+    angle_now = left_arm_frame->GetAngle();
+    if (angle_now >= 60.f)
+        left_arm_frame->setDirection(-1);
+    if (angle_now <= 0.f)
+        left_arm_frame->setDirection(1);
+    left_arm_frame->Rotate(l_rotate_angle);
+}
 void Skeleton::OnPaint()
 {
-    _pRenderTarget->BeginDraw();
-    _pRenderTarget->Clear();
-    // Update the angle of the right arm for the next frame
-
-    if (wave && arm)
+   _pRenderTarget->BeginDraw();
+   _pRenderTarget->Clear();
+     if (wave && arm)
     {
-        auto right_arm_frame = _mainframe->getChild("right_arm");
-
-        float angle_now = right_arm_frame->GetAngle();
-        if (angle_now <= -30.f)
-            right_arm_frame->setDirection(-1);
-        if (angle_now >= 0.f)
-            right_arm_frame->setDirection(1);
-        right_arm_frame->Rotate(r_arm_angle);
-
-        right_arm_frame = right_arm_frame->getChild("right_forearm");
-
-        angle_now = right_arm_frame->GetAngle();
-        if (angle_now <= -60.f)
-            right_arm_frame->setDirection(-1);
-        if (angle_now >= 0.f)
-            right_arm_frame->setDirection(1);
-        right_arm_frame->Rotate(r_arm_angle);
-
-        right_arm_frame = right_arm_frame->getChild("right_hand");
-
-        angle_now = right_arm_frame->GetAngle();
-        if (angle_now <= -90.f)
-            right_arm_frame->setDirection(-1);
-        if (angle_now >= 0.f)
-            right_arm_frame->setDirection(1);
-        right_arm_frame->Rotate(r_arm_angle);
+        animateRightArm();
+        returnLeftArm();
     }
     if (wave && !arm)
     {
-        auto left_arm_frame = _mainframe->getChild("left_arm");
-
-        float angle_now = left_arm_frame->GetAngle();
-        if (angle_now >= 30.f)
-            left_arm_frame->setDirection(-1);
-        if (angle_now <= 0.f)
-            left_arm_frame->setDirection(1);
-        left_arm_frame->Rotate(l_arm_angle);
-
-        left_arm_frame = left_arm_frame->getChild("left_forearm");
-
-        angle_now = left_arm_frame->GetAngle();
-        if (angle_now >= 60.f)
-            left_arm_frame->setDirection(-1);
-        if (angle_now <= 0.f)
-            left_arm_frame->setDirection(1);
-        left_arm_frame->Rotate(l_arm_angle);
-
-        left_arm_frame = left_arm_frame->getChild("left_hand");
-
-        angle_now = left_arm_frame->GetAngle();
-        if (angle_now >= 90.f)
-            left_arm_frame->setDirection(-1);
-        if (angle_now <= 0.f)
-            left_arm_frame->setDirection(1);
-        left_arm_frame->Rotate(l_arm_angle);
+        animateLeftArm();
+        returnRightArm();
     }
-   
-
-
-
         _mainframe->Draw(_pRenderTarget);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/60));
         _pRenderTarget->EndDraw();

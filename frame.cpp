@@ -8,6 +8,21 @@ Frame* Frame::getChild(std::string name)
     return nullptr;
 }
 
+D2D1_POINT_2F Frame::GetPosition() const
+{
+    return _position;
+}
+
+D2D1_SIZE_F Frame::GetScale() const
+{
+    return _scale;
+}
+
+float Frame::GetAngle() const
+{
+    return _angle;
+}
+
 D2D1::Matrix3x2F Frame::GetTransform() const
 {
     if(_parent)

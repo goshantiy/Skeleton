@@ -30,9 +30,9 @@ public:
     void Move(D2D1_POINT_2F);
     void Draw(ID2D1RenderTarget* renderTarget);
     Frame* getChild(std::string);
-    D2D1_POINT_2F GetPosition() const { return _position; }
-    D2D1_SIZE_F GetScale() const { return _scale; }
-    float GetAngle() const { return _angle; }
+    D2D1_POINT_2F GetPosition() const;
+    D2D1_SIZE_F GetScale() const;
+    float GetAngle() const;
     D2D1::Matrix3x2F GetTransform() const;
     D2D1::Matrix3x2F GetParentTransform() const;
 };
