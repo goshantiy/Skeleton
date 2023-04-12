@@ -18,9 +18,8 @@ private:
     int _direction = 1;
 public:
     Frame(D2D1_POINT_2F pos, D2D1_SIZE_F scale, float angle, Frame* parent, std::string name):
-        _position(pos), _scale(scale), _angle(angle), _parent(parent),_name(name) {};
-    ~Frame() {};
- 
+        _position(pos), _scale(scale), _angle(angle), _parent(parent),_name(name) {}; 
+    ~Frame();
     void setDirection(int);
     void addElem(IElement*);
     void addChild(Frame*);
@@ -30,6 +29,7 @@ public:
     void Move(D2D1_POINT_2F);
     void Draw(ID2D1RenderTarget* renderTarget);
     Frame* getChild(std::string);
+    IElement* getElem(std::string);
     D2D1_POINT_2F GetPosition() const;
     D2D1_SIZE_F GetScale() const;
     float GetAngle() const;

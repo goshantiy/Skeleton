@@ -37,6 +37,15 @@ D2D1::Matrix3x2F Frame::GetParentTransform() const
     }
     return D2D1::Matrix3x2F::Identity();
 }
+Frame::~Frame()
+{
+    for (auto& child : _children) {
+        delete child;
+    }
+    for (auto& elem : _elements) {
+        delete elem;
+    }
+}
 void Frame::setDirection(int dir)
 {
     if (dir >= 0)
@@ -48,7 +57,13 @@ void Frame::addElem(IElement* elem)
 {
     _elements.push_back(elem);
 }
-
+IElement* Frame::getElem(std::string name)
+{
+    for (auto it : _elements)
+        if (it->getName() == name)
+            return it;
+    return nullptr;
+}
 void Frame::addChild(Frame* child)
 {
 	_children.push_back(child);
@@ -94,8 +109,6 @@ void Frame::Move(D2D1_POINT_2F pos)
 
 void Frame::Draw(ID2D1RenderTarget* renderTarget)
 {
-    //renderTarget->SaveDrawingState();
-
     D2D1::Matrix3x2F transform = GetTransform()*GetParentTransform();
 
     // устанавливаем матрицу преобразования
@@ -108,7 +121,4 @@ void Frame::Draw(ID2D1RenderTarget* renderTarget)
     for (Frame* child : _children) {
         child->Draw(renderTarget);
     }
-
-    // восстанавливаем состояние рендеринга
-    //renderTarget->RestoreDrawingState();
 }
