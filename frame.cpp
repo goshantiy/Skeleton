@@ -103,7 +103,7 @@ void Frame::Move(D2D1_POINT_2F pos)
 
 void Frame::Draw(ID2D1RenderTarget* renderTarget)
 {
-    D2D1::Matrix3x2F transform = GetTransform()*GetParentTransform();
+    D2D1::Matrix3x2F transform = GetParentTransform() * GetTransform();
 
     // set transform matrix
     renderTarget->SetTransform(transform);
